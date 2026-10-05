@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Workshop palette: bottle-green structure, cool paper surfaces, oak for attention. */
+  --color-canopy-950: #0f2a22;
+  --color-canopy-900: #153a2f;
+  --color-canopy-800: #1c4a3c;
+  --color-canopy-700: #235c4a;
+  --color-canopy-600: #2d735d;
+  --color-canopy-100: #dcebe4;
+  --color-canopy-50: #eef5f1;
+
+  --color-paper: #f5f6f3;
+  --color-card: #ffffff;
+  --color-ink: #17221e;
+  --color-ink-2: #45534d;
+  --color-ink-3: #6b7872;
+  --color-line: #dfe4de;
+  --color-line-2: #ebeeea;
+
+  --color-oak-700: #8a5a12;
+  --color-oak-600: #a86f1b;
+  --color-oak-100: #f8ecd3;
+
+  --color-mapped: #1b7448;
+  --color-mapped-bg: #e2f2e9;
+  --color-unmapped: #b03a22;
+  --color-unmapped-bg: #fbe8e3;
+  --color-review: #8f5d00;
+  --color-review-bg: #faefd2;
+  --color-remap: #6540a0;
+  --color-remap-bg: #eee7f8;
+}
+
+/* Base and component rules live in layers so that utility classes can always override them. */
+@layer base {
+  html, body { height: 100%; }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  *, ::before, ::after { border-color: var(--color-line); }
+  :focus-visible { outline: 2px solid var(--color-canopy-600); outline-offset: 2px; }
+  ::selection { background: var(--color-canopy-100); }
+}
+
+@layer components {
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* Table: dense, hairline rows. */
+  .tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .tbl th {
+    text-align: left; font-weight: 500; color: var(--color-ink-3); white-space: nowrap;
+    padding: 9px 12px; background: #fafbf9; border-bottom: 1px solid var(--color-line);
+  }
+  .tbl td { padding: 9px 12px; border-bottom: 1px solid var(--color-line-2); vertical-align: top; }
+  .tbl tbody tr:last-child td { border-bottom: 0; }
+  .tbl tbody tr:hover td { background: #fafbf9; }
+  .tbl td.num, .tbl th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .modal-in { animation: rise 0.14s ease-out; }
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px) scale(0.99); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .modal-in { animation: none; } * { transition: none !important; } }

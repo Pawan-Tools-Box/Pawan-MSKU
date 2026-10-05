@@ -1,0 +1,37 @@
+# Start everything with:  docker compose up -d --build
+# Then open http://localhost:3000 and sign in with ADMIN_EMAIL / ADMIN_PASSWORD below.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: oakcraft
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-this-database-password}
+      POSTGRES_DB: oakcraft_crm
+    volumes:
+      - oakcraft_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oakcraft -d oakcraft_crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://oakcraft:${DB_PASSWORD:-change-this-database-password}@db:5432/oakcraft_crm
+      ADMIN_NAME: ${ADMIN_NAME:-Admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@oakcraft.in}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe@123}
+      # Set to "true" once the app is served over HTTPS.
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-30}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+volumes:
+  oakcraft_pgdata:
